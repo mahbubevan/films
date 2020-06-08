@@ -133,8 +133,10 @@ class FilmList extends Component {
                                             Country: {film.country}
                                         </CardSubtitle>
                                         <Link
-                                            to={`/film/${film.id}`}
-                                            key={film.id}
+                                            to={{
+                                                pathname: `/film/${film.name}`,
+                                                query: film.id
+                                            }}
                                         >
                                             <Button>Details</Button>
                                         </Link>

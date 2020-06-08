@@ -20,7 +20,7 @@ class Film extends Component {
     }
 
     componentDidMount() {
-        const id = this.props.match.params.id;
+        const id = this.props.location.query;
         console.log(id);
         axios.get(`http://127.0.0.1:8000/api/films/${id}`).then(res => {
             this.setState({
