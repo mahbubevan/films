@@ -19,6 +19,6 @@
             </div>
         </div>
     </div>
-    <div id="frontend"></div>
+
 </div>
 @endsection

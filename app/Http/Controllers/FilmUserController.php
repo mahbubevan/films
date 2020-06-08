@@ -16,8 +16,7 @@ class FilmUserController extends Controller
     {
         $users = $film->comments()
             ->with('user')
-            ->get()
-            ->pluck('user');
+            ->get();
 
         return response()->json(['data' => $users]);
     }
