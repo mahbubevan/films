@@ -1,5 +1,6 @@
 <?php
 
+use App\Film;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +21,7 @@ class CreateFilmsTable extends Migration
             $table->date('release');
             $table->string('rating');
             $table->double('price');
+            $table->string('ticket')->default(Film::TICKET_AVAILABLE);
             $table->string('country');
             $table->string('photo');
 

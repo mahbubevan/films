@@ -14,6 +14,8 @@ class Film extends Model
 
     const DEFAULT_DESCRIPTION = "NO DESCRIPTION";
     const DEFAULT_RATING = '0';
+    const TICKET_AVAILABLE = 'available';
+    const TICKET_NOT_AVAILABLE = 'not_available';
 
     protected $table = 'films';
     protected $dates = ['deleted_at'];
@@ -33,5 +35,10 @@ class Film extends Model
     public function genres()
     {
         return $this->belongsToMany(Genre::class);
+    }
+
+    public function isAvailable()
+    {
+        return $this->ticket == Film::TICKET_AVAILABLE;
     }
 }
