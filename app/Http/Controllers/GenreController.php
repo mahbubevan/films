@@ -14,7 +14,9 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
+        $genres = Genre::all();
+
+        return response()->json(['data' => $genres]);
     }
 
     /**
@@ -46,7 +48,7 @@ class GenreController extends Controller
      */
     public function show(Genre $genre)
     {
-        //
+        return response()->json(['data' => $genre]);
     }
 
     /**

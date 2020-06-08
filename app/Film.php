@@ -27,6 +27,10 @@ class Film extends Model
         'price', 'country', 'photo',
     ];
 
+    protected $hidden = [
+        'pivot',
+    ];
+
     public function comments()
     {
         return $this->hasMany(Comment::class, 'film_id');
