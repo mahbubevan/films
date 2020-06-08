@@ -83199,7 +83199,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_timeago__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-timeago */ "./node_modules/react-timeago/lib/index.js");
 /* harmony import */ var react_timeago__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_timeago__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -83221,6 +83222,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -83286,7 +83288,9 @@ var Film = /*#__PURE__*/function (_Component) {
         className: "text-success"
       }, "Available") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "text-danger"
-      }, "Not Available"), " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, " Country of origin: ", this.state.film.country, " ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Not Available"), " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, " Country of origin: ", this.state.film.country, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+        to: "/filmlist"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], null, "Details")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-8 comment-list"
       }, this.state.commentsUser.map(function (comment, id) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -83372,8 +83376,20 @@ var FilmList = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       filmList: [],
+      current_page: 0,
+      first_page_url: "",
+      from: 0,
+      last_page: 0,
+      last_page_url: "",
+      next_page_url: "",
+      per_page: 0,
+      prev_page_url: "",
+      to: 0,
+      total: 0,
       isLoading: false
     };
+    _this.nextPageHandler = _this.nextPageHandler.bind(_assertThisInitialized(_this));
+    _this.prevPageHandler = _this.prevPageHandler.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -83383,9 +83399,65 @@ var FilmList = /*#__PURE__*/function (_Component) {
       var _this2 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/").then(function (res) {
+        // console.log(res.data.data);
         _this2.setState({
-          filmList: res.data.data,
+          filmList: res.data.data.data,
+          current_page: res.data.data.current_page,
+          first_page_url: res.data.data.first_page_url,
+          from: res.data.data.from,
+          last_page: res.data.data.last_page,
+          last_page_url: res.data.data.last_page_url,
+          next_page_url: res.data.data.next_page_url,
+          per_page: res.data.data.per_page,
+          prev_page_url: res.data.data.prev_page_url,
+          to: res.data.data.to,
+          total: res.data.data.total,
           isLoading: true
+        });
+      });
+    }
+  }, {
+    key: "nextPageHandler",
+    value: function nextPageHandler() {
+      var _this3 = this;
+
+      var url = this.state.next_page_url;
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url).then(function (res) {
+        // console.log(res.data.data);
+        _this3.setState({
+          filmList: res.data.data.data,
+          current_page: res.data.data.current_page,
+          first_page_url: res.data.data.first_page_url,
+          from: res.data.data.from,
+          last_page: res.data.data.last_page,
+          last_page_url: res.data.data.last_page_url,
+          next_page_url: res.data.data.next_page_url,
+          per_page: res.data.data.per_page,
+          prev_page_url: res.data.data.prev_page_url,
+          to: res.data.data.to,
+          total: res.data.data.total
+        });
+      });
+    }
+  }, {
+    key: "prevPageHandler",
+    value: function prevPageHandler() {
+      var _this4 = this;
+
+      var url = this.state.prev_page_url;
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url).then(function (res) {
+        _this4.setState({
+          filmList: res.data.data.data,
+          current_page: res.data.data.current_page,
+          first_page_url: res.data.data.first_page_url,
+          from: res.data.data.from,
+          last_page: res.data.data.last_page,
+          last_page_url: res.data.data.last_page_url,
+          next_page_url: res.data.data.next_page_url,
+          per_page: res.data.data.per_page,
+          prev_page_url: res.data.data.prev_page_url,
+          to: res.data.data.to,
+          total: res.data.data.total
         });
       });
     }
@@ -83395,6 +83467,14 @@ var FilmList = /*#__PURE__*/function (_Component) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Film Lists"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "ml-right"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "btn btn-sm btn-disabled btn-success text-white mr-1"
+      }, " ", "Total Records: ", this.state.total, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "btn btn-sm btn-disabled btn-success text-white mr-1"
+      }, " ", "Result Showing: ", this.state.from, " to ", this.state.to, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "btn btn-sm btn-disabled btn-success text-white mr-1"
+      }, " ", "Current Page: ", this.state.current_page, " of", " ", this.state.last_page, " ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
       }, this.state.filmList.map(function (film, id) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -83406,10 +83486,30 @@ var FilmList = /*#__PURE__*/function (_Component) {
           src: film.photo,
           alt: "Film Thumbnail"
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardBody"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardTitle"], null, "Movie: ", film.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardSubtitle"], null, "Country: ", film.country), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
-          to: "film/".concat(film.id),
+          to: "/film/".concat(film.id),
           key: film.id
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], null, "Details")))));
-      }))));
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "text-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "ml-2 pr-1"
+      }, this.state.prev_page_url === null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        disabled: true,
+        className: "btn btn-md btn-primary"
+      }, "Prev Page") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.prevPageHandler,
+        className: "btn btn-md btn-primary"
+      }, "Prev Page")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "pl-1"
+      }, this.state.next_page_url === null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        disabled: true,
+        className: "btn btn-md btn-primary"
+      }, "Next Page") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.nextPageHandler,
+        className: "btn btn-md btn-primary"
+      }, "Next Page"))))));
     }
   }]);
 

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import TimeAgo from "react-timeago";
-
+import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
 
 class Film extends Component {
@@ -64,6 +64,11 @@ class Film extends Component {
                             )}{" "}
                         </h6>
                         <h6> Country of origin: {this.state.film.country} </h6>
+                        <div>
+                            <Link to={`/filmlist`}>
+                                <Button>Details</Button>
+                            </Link>
+                        </div>
                     </div>
                     <div className="col-md-8 comment-list">
                         {this.state.commentsUser.map((comment, id) => (
