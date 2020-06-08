@@ -25,11 +25,11 @@ Route::resource('films.users', 'FilmUserController', ['only' => ['index']]); // 
 Route::resource('films.genres', 'FilmGenreController', ['only' => ['index']]); // Genres List For Specific Films
 
 // Genre ROutes
-Route::resource('genres', 'GenreController');
+Route::resource('genres', 'GenreController', ['only' => ['index', 'show']]);
 Route::resource('genres.films', 'GenreFilmController', ['only' => ['index']]); // Films List For Specific Genre
 
 //Comments Routes
-Route::resource('comments', 'CommentController');
+Route::resource('comments', 'CommentController', ['only' => ['index', 'show']]);
 
 //Users
 Route::resource('users', 'UserController');

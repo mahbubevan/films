@@ -37,7 +37,6 @@ class FilmController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -48,7 +47,7 @@ class FilmController extends Controller
      */
     public function show(Film $film)
     {
-        //
+        return response()->json(['data' => $film]);
     }
 
     /**
