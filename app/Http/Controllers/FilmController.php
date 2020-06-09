@@ -47,6 +47,33 @@ class FilmController extends Controller
      */
     public function store(Request $request)
     {
+        $data = $request->all();
+        // dd($data);
+        // $data['photo'] = '/img/thumbnail.jpg';
+        // $data['release'] = strtotime($request->release);
+        // dd($data);
+        // $file_name = $_FILES['image']['name'];
+        // $file_size = $_FILES['image']['size'];
+        // $file_temp = $_FILES['image']['tmp_name'];
+
+        // $div = explode('.', $file_name);
+        // $file_ext = strtolower(end($div));
+        // $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
+        // $uploaded_image = "/public/img/" . $unique_image;
+        // move_uploaded_file($file_temp, $uploaded_image);
+        // return response()->json(['data' => $data], 200);
+        $file = $request->file('photo');
+        $dateTime = date('Ymd_His');
+        $filename = '/img/' . $dateTime . '-' . $file->getClientOriginalName();
+        $savePath = public_path('/img/');
+
+        $data['photo'] = $filename;
+
+        // return response()->json(['data' => $data], 200);
+
+        $film = Film::create($data);
+        $file->move($savePath, $filename);
+        return response()->json(['data' => $film], 200);
     }
 
     /**

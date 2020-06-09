@@ -37,6 +37,11 @@ class Navbar extends Component {
                     </Link>
                 </li>
                 <li className="nav-item">
+                    <Link to="/addnewfilm" className="nav-link">
+                        Add New Film
+                    </Link>
+                </li>
+                <li className="nav-item">
                     <a
                         href=""
                         onClick={this.logOut.bind(this)}

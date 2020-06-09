@@ -22,7 +22,7 @@ class Film extends Model
 
     protected $fillable = [
         'name',
-        'description', 'release_date',
+        'description', 'release',
         'rating', 'ticket',
         'price', 'country', 'photo',
     ];
