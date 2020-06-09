@@ -14,7 +14,8 @@ class AddFilm extends Component {
             price: 0,
             ticket: "not_available",
             country: "",
-            photo: null
+            photo: null,
+            success: { status: false }
         };
 
         this.validateForm = this.validateForm.bind(this);
@@ -59,6 +60,17 @@ class AddFilm extends Component {
             .post("http://127.0.0.1:8000/api/films", formData, config)
             .then(res => {
                 console.log(res);
+                this.setState({
+                    success: { message: "Successfully Added.", status: true },
+                    name: "",
+                    description: "",
+                    release: "",
+                    rating: "1",
+                    price: 0,
+                    ticket: "not_available",
+                    country: "",
+                    photo: null
+                });
             })
             .catch(err => console.log(err));
     }
@@ -84,6 +96,11 @@ class AddFilm extends Component {
                 <h2 className="mb-3 font-weight-normal text-info">
                     Add New Film
                 </h2>
+                {this.state.success.status ? (
+                    <span className="text-success">Successfully Added</span>
+                ) : (
+                    <span></span>
+                )}
                 <Form>
                     <FormGroup>
                         <Label for="name">Movie Name: </Label>

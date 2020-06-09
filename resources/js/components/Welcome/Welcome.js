@@ -11,7 +11,9 @@ class Welcome extends Component {
             <div className="container">
                 <div className="jumbotron mt-5">
                     <div className="col-sm-8 mx-auto">
-                        <h1 className="text-center">Welcome</h1>
+                        <h1 className="text-center">
+                            Welcome To Film Review Site
+                        </h1>
                     </div>
                 </div>
             </div>

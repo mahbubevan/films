@@ -83278,7 +83278,10 @@ var AddFilm = /*#__PURE__*/function (_Component) {
       price: 0,
       ticket: "not_available",
       country: "",
-      photo: null
+      photo: null,
+      success: {
+        status: false
+      }
     };
     _this.validateForm = _this.validateForm.bind(_assertThisInitialized(_this));
     _this.setInputValue = _this.setInputValue.bind(_assertThisInitialized(_this));
@@ -83297,6 +83300,8 @@ var AddFilm = /*#__PURE__*/function (_Component) {
   }, {
     key: "submitForm",
     value: function submitForm() {
+      var _this2 = this;
+
       // const body = {
       //     name: this.state.name,
       //     description: this.state.description,
@@ -83322,6 +83327,21 @@ var AddFilm = /*#__PURE__*/function (_Component) {
       formData.append("photo", this.state.photo);
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("http://127.0.0.1:8000/api/films", formData, config).then(function (res) {
         console.log(res);
+
+        _this2.setState({
+          success: {
+            message: "Successfully Added.",
+            status: true
+          },
+          name: "",
+          description: "",
+          release: "",
+          rating: "1",
+          price: 0,
+          ticket: "not_available",
+          country: "",
+          photo: null
+        });
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -83341,7 +83361,9 @@ var AddFilm = /*#__PURE__*/function (_Component) {
     value: function render() {
       var form = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
         className: "mb-3 font-weight-normal text-info"
-      }, "Add New Film"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["FormGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Label"], {
+      }, "Add New Film"), this.state.success.status ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "text-success"
+      }, "Successfully Added") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["FormGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Label"], {
         "for": "name"
       }, "Movie Name: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Input"], {
         autoFocus: true,
@@ -83892,6 +83914,7 @@ var FilmList = /*#__PURE__*/function (_Component) {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Card"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardImg"], {
           top: true,
           width: "100%",
+          height: "350px",
           src: film.photo,
           alt: "Film Thumbnail"
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardBody"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardTitle"], null, "Movie: ", film.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardSubtitle"], null, "Country: ", film.country), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
@@ -84452,7 +84475,7 @@ var Welcome = /*#__PURE__*/function (_Component) {
         className: "col-sm-8 mx-auto"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
         className: "text-center"
-      }, "Welcome"))));
+      }, "Welcome To Film Review Site"))));
     }
   }]);
 

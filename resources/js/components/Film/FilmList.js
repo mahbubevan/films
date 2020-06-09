@@ -190,6 +190,7 @@ class FilmList extends Component {
                                         <CardImg
                                             top
                                             width="100%"
+                                            height="350px"
                                             src={film.photo}
                                             alt="Film Thumbnail"
                                         />
