@@ -29,16 +29,17 @@ Route::resource('films.genres', 'FilmGenreController', ['only' => ['index']]); /
 
 
 // Genre ROutes
-Route::resource('genres', 'GenreController', ['only' => ['index', 'show']]);
-Route::resource('genres.films', 'GenreFilmController', ['only' => ['index']]); // Films List For Specific Genre
+// Route::resource('genres', 'GenreController', ['only' => ['index', 'show']]);
+// Route::resource('genres.films', 'GenreFilmController', ['only' => ['index']]); // Films List For Specific Genre
 
 //Comments Routes
-Route::resource('comments', 'CommentController', ['only' => ['index', 'show']]);
+Route::resource('comments', 'CommentController', ['only' => ['index', 'show', 'store']]);
 
 //Users
 Route::resource('users', 'UserController');
 Route::resource('users.comments', 'UserCommentController', ['only' => ['index']]); //Specific User's Comments list
 Route::resource('users.films', 'UserFilmController', ['only' => ['index']]); // Flim list In Which specific user Have Commented
+Route::post('usersinfo', 'UserController@getUserByEmail')->name('userbyemail');
 
 
 

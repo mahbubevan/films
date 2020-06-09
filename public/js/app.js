@@ -83221,6 +83221,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -83260,13 +83274,19 @@ var Film = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       film: [],
+      userInfo: [],
       commentsUser: [],
       filmGenres: [],
       genreIsLoaded: false,
       commentUserIsLoading: false,
       isLoading: false,
-      film_id: null
+      film_id: null,
+      comment: ""
     };
+    _this.validateForm = _this.validateForm.bind(_assertThisInitialized(_this));
+    _this.setInputValue = _this.setInputValue.bind(_assertThisInitialized(_this));
+    _this.submitForm = _this.submitForm.bind(_assertThisInitialized(_this));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -83278,6 +83298,10 @@ var Film = /*#__PURE__*/function (_Component) {
       var id = this.props.location.query.film;
       var access_token = this.props.location.query.bearer_token; // console.log(id);
 
+      this.setState({
+        userInfo: this.props.location.query.user_info,
+        film_id: this.props.location.query.film
+      });
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/".concat(id), {
         headers: {
           Authorization: "Bearer ".concat(access_token)
@@ -83310,6 +83334,40 @@ var Film = /*#__PURE__*/function (_Component) {
           genreIsLoaded: true
         });
       });
+    }
+  }, {
+    key: "validateForm",
+    value: function validateForm() {
+      return this.state.comment.length > 0;
+    }
+  }, {
+    key: "setInputValue",
+    value: function setInputValue(event) {
+      this.setState(_defineProperty({}, event.target.name, event.target.value));
+    }
+  }, {
+    key: "submitForm",
+    value: function submitForm() {
+      var _this3 = this;
+
+      var body = {
+        comment: this.state.comment,
+        user_id: this.state.userInfo[0].id,
+        film_id: this.state.film_id
+      }; // console.log(this.state.userInfo[0].id);
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("http://127.0.0.1:8000/api/comments", body).then(function (res) {
+        console.log(res.data.data);
+
+        _this3.setState({
+          commentsUser: [].concat(_toConsumableArray(_this3.state.commentsUser), [res.data.data])
+        });
+      });
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(event) {
+      event.preventDefault();
     }
   }, {
     key: "render",
@@ -83354,7 +83412,21 @@ var Film = /*#__PURE__*/function (_Component) {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", null, comment.user.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, comment.comment, " --", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_timeago__WEBPACK_IMPORTED_MODULE_2___default.a, {
           date: comment.created_at
         }))))));
-      }))));
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Form"], {
+        onSubmit: function onSubmit(e) {
+          return e.preventDefault();
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_4__["FormGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Label"], null, "New Comment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Input"], {
+        autoFocus: true,
+        type: "text",
+        name: "comment",
+        value: this.state.comment,
+        onChange: this.setInputValue
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
+        type: "submit",
+        disabled: !this.validateForm(),
+        onClick: this.submitForm
+      }, "Add"))))));
     }
   }]);
 
@@ -83430,28 +83502,36 @@ var FilmList = /*#__PURE__*/function (_Component) {
       prev_page_url: "",
       to: 0,
       total: 0,
+      isUserAuthenticated: false,
+      userInfo: [],
+      user_access_token: "",
+      email: "",
       isLoading: false,
       access_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiOGY2YjUyMzIwNGU2MjJkYWRhZjA5ODk0MmQzYWQyNDg5OWE2NmQ3NDlmNmFmYmYwZGYzMTBiODZlNmQ5MTEwY2E5NTFmNWU1NzA1MzNlZDkiLCJpYXQiOjE1OTE2ODgxMDUsIm5iZiI6MTU5MTY4ODEwNSwiZXhwIjoxNjIzMjI0MTA1LCJzdWIiOiIiLCJzY29wZXMiOltdfQ.fTpWrD4-mu1dw8eud3cLOW22g8AiwRRBg_nNW2tCXLMDD4GtNTW6tiYUhFtQThihP6dcn5iFc0ArZw3fY-LtVWCFSkPQV6rtvj6uLH0sfS2C7uDHFfSGvBSgIPNFh62HcksT_SuhKG-dcv7czDtQqD-P0Sqq3Xkr6dkGsZB-kAXFBIiEhFiAwuyag0wcGn-Ph8_R-pxcf4L1VhPWDL1S7oXPbNyPBPzETGeL3ECWYk4V16wTEteELqxVHiEOQ7cAYdbjvYbSVkWIKrw4cLqM-msgwIDSQma4Tzmks2GGWgMuBCw43viqymxaVAffoXSxJUaqLiisN8Rtre1_9Ge-CLgVF2KyDhmiNEgvM2aL6LMP14K47MlyTZMs2pVmyS3puywSGdDwa_kDxL1GDt349AHXyQn_rLHEMbEnvSFRgkO1aF7rmsrrfTfuvlBVQ3p5yppjp82UkOiL9P3KzvA0fTjyCRz4-sRK2HWsJK6GBFUDnzPg-bFnjyCGkrutzEZEEvgO2-Zw9lPkZle255wbP_f2SdIRE1HyJd0fAo2vR1zM__y7fjypUC74StLqbkZq8Bxq9o9rzGAghbUeBGoJCfaslelkRfd8MjHL_79CWpQEZg4AzxpnoOkTCJ6mn3KiEfoDYUQUOhkbkesakpkj640im4PVhHPy7YV2D6gwT6o"
     };
     _this.nextPageHandler = _this.nextPageHandler.bind(_assertThisInitialized(_this));
     _this.prevPageHandler = _this.prevPageHandler.bind(_assertThisInitialized(_this));
     return _this;
-  } // const body = {
-  //         grant_type: "client_credentials",
-  //         client_id: 2,
-  //         client_secret: "zNU41MzobVGo09ndiZr2Z0OKwKXlXKTXVAKzG25w"
-  //     };
-  //     axios.post("http://127.0.0.1:8000/oauth/token", body).then(res =>
-  //         this.setState({
-  //             access_token: res.data.access_token
-  //         })
-  //     );
-
+  }
 
   _createClass(FilmList, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
+
+      var userEmail = "null";
+      var user_access_token = "null";
+
+      if (this.props.history.location.state == undefined) {
+        userEmail = "null";
+        user_access_token = "null";
+      } else {
+        userEmail = this.props.history.location.state.email;
+        user_access_token = this.props.history.location.state.user_access_token;
+        this.setState({
+          isUserAuthenticated: this.props.history.location.state.userIsAuthenticated
+        });
+      }
 
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/", {
         headers: {
@@ -83472,6 +83552,19 @@ var FilmList = /*#__PURE__*/function (_Component) {
           to: res.data.data.to,
           total: res.data.data.total,
           isLoading: true
+        });
+      });
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("http://127.0.0.1:8000/api/usersinfo/", {
+        email: userEmail
+      }, {
+        headers: {
+          Authorization: "Bearer ".concat(user_access_token)
+        }
+      }).then(function (res) {
+        console.log(res.data);
+
+        _this2.setState({
+          userInfo: res.data.data
         });
       });
     }
@@ -83533,7 +83626,7 @@ var FilmList = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this5 = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.isUserAuthenticated ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Film Lists"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "ml-right"
@@ -83541,7 +83634,7 @@ var FilmList = /*#__PURE__*/function (_Component) {
         className: "btn btn-sm btn-disabled btn-success text-white mr-1"
       }, " ", "Total Records: ", this.state.total, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "btn btn-sm btn-disabled btn-success text-white mr-1"
-      }, " ", "Result Showing: ", this.state.from, " to ", this.state.to, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, " ", "Result Showing: ", this.state.from, " to", " ", this.state.to, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "btn btn-sm btn-disabled btn-success text-white mr-1"
       }, " ", "Current Page: ", this.state.current_page, " of", " ", this.state.last_page, " ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row"
@@ -83559,7 +83652,8 @@ var FilmList = /*#__PURE__*/function (_Component) {
             pathname: "/film/".concat(film.name),
             query: {
               film: film.id,
-              bearer_token: _this5.state.access_token
+              bearer_token: _this5.state.access_token,
+              user_info: _this5.state.userInfo
             }
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], null, "Details")))));
@@ -83583,7 +83677,7 @@ var FilmList = /*#__PURE__*/function (_Component) {
       }, "Next Page") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.nextPageHandler,
         className: "btn btn-md btn-primary"
-      }, "Next Page"))))));
+      }, "Next Page"))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " Please Login First "));
     }
   }]);
 
@@ -83606,6 +83700,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -83633,6 +83730,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
 var Login = /*#__PURE__*/function (_Component) {
   _inherits(Login, _Component);
 
@@ -83647,7 +83746,9 @@ var Login = /*#__PURE__*/function (_Component) {
     _this.state = {
       userIsAuthenticated: false,
       email: "",
-      password: ""
+      password: "",
+      token_type: "",
+      access_token: ""
     };
     _this.validateForm = _this.validateForm.bind(_assertThisInitialized(_this));
     _this.setInputValue = _this.setInputValue.bind(_assertThisInitialized(_this));
@@ -83667,7 +83768,41 @@ var Login = /*#__PURE__*/function (_Component) {
     }
   }, {
     key: "submitForm",
-    value: function submitForm() {}
+    value: function submitForm() {
+      var _this2 = this;
+
+      var body = {
+        grant_type: "password",
+        client_id: 2,
+        client_secret: "zNU41MzobVGo09ndiZr2Z0OKwKXlXKTXVAKzG25w",
+        username: this.state.email,
+        password: this.state.password
+      };
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("http://127.0.0.1:8000/oauth/token", body).then(function (res) {
+        console.log(res.data);
+
+        _this2.setState({
+          token_type: res.data.token_type,
+          access_token: res.data.access_token,
+          userIsAuthenticated: true
+        }); // console.log(this.state.userIsAuthenticated);
+
+
+        if (_this2.state.userIsAuthenticated) {
+          // console.log(this.state.email);
+          // console.log("it is true");
+          _this2.props.history.push({
+            pathname: "/filmlist",
+            state: {
+              userIsAuthenticated: _this2.state.userIsAuthenticated,
+              email: _this2.state.email,
+              user_access_token: _this2.state.access_token
+            }
+          }); // return <Redirect to={"/filmlist/"} />;
+
+        }
+      });
+    }
   }, {
     key: "render",
     value: function render() {

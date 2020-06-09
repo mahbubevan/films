@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -83,5 +87,13 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function getUserByEmail(Request $request)
+    {
+        $email = $request->email;
+        $user = User::where('email', $email)->get();
+
+        return response()->json(['data' => $user]);
     }
 }

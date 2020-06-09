@@ -27,6 +27,10 @@ class FilmList extends Component {
             prev_page_url: "",
             to: 0,
             total: 0,
+            isUserAuthenticated: false,
+            userInfo: [],
+            user_access_token: "",
+            email: "",
             isLoading: false,
             access_token:
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiOGY2YjUyMzIwNGU2MjJkYWRhZjA5ODk0MmQzYWQyNDg5OWE2NmQ3NDlmNmFmYmYwZGYzMTBiODZlNmQ5MTEwY2E5NTFmNWU1NzA1MzNlZDkiLCJpYXQiOjE1OTE2ODgxMDUsIm5iZiI6MTU5MTY4ODEwNSwiZXhwIjoxNjIzMjI0MTA1LCJzdWIiOiIiLCJzY29wZXMiOltdfQ.fTpWrD4-mu1dw8eud3cLOW22g8AiwRRBg_nNW2tCXLMDD4GtNTW6tiYUhFtQThihP6dcn5iFc0ArZw3fY-LtVWCFSkPQV6rtvj6uLH0sfS2C7uDHFfSGvBSgIPNFh62HcksT_SuhKG-dcv7czDtQqD-P0Sqq3Xkr6dkGsZB-kAXFBIiEhFiAwuyag0wcGn-Ph8_R-pxcf4L1VhPWDL1S7oXPbNyPBPzETGeL3ECWYk4V16wTEteELqxVHiEOQ7cAYdbjvYbSVkWIKrw4cLqM-msgwIDSQma4Tzmks2GGWgMuBCw43viqymxaVAffoXSxJUaqLiisN8Rtre1_9Ge-CLgVF2KyDhmiNEgvM2aL6LMP14K47MlyTZMs2pVmyS3puywSGdDwa_kDxL1GDt349AHXyQn_rLHEMbEnvSFRgkO1aF7rmsrrfTfuvlBVQ3p5yppjp82UkOiL9P3KzvA0fTjyCRz4-sRK2HWsJK6GBFUDnzPg-bFnjyCGkrutzEZEEvgO2-Zw9lPkZle255wbP_f2SdIRE1HyJd0fAo2vR1zM__y7fjypUC74StLqbkZq8Bxq9o9rzGAghbUeBGoJCfaslelkRfd8MjHL_79CWpQEZg4AzxpnoOkTCJ6mn3KiEfoDYUQUOhkbkesakpkj640im4PVhHPy7YV2D6gwT6o"
@@ -35,19 +39,23 @@ class FilmList extends Component {
         this.nextPageHandler = this.nextPageHandler.bind(this);
         this.prevPageHandler = this.prevPageHandler.bind(this);
     }
-    // const body = {
-    //         grant_type: "client_credentials",
-    //         client_id: 2,
-    //         client_secret: "zNU41MzobVGo09ndiZr2Z0OKwKXlXKTXVAKzG25w"
-    //     };
-
-    //     axios.post("http://127.0.0.1:8000/oauth/token", body).then(res =>
-    //         this.setState({
-    //             access_token: res.data.access_token
-    //         })
-    //     );
 
     componentDidMount() {
+        var userEmail = "null";
+        var user_access_token = "null";
+        if (this.props.history.location.state == undefined) {
+            userEmail = "null";
+            user_access_token = "null";
+        } else {
+            userEmail = this.props.history.location.state.email;
+            user_access_token = this.props.history.location.state
+                .user_access_token;
+            this.setState({
+                isUserAuthenticated: this.props.history.location.state
+                    .userIsAuthenticated
+            });
+        }
+
         axios
             .get("http://127.0.0.1:8000/api/films/", {
                 headers: {
@@ -69,6 +77,23 @@ class FilmList extends Component {
                     to: res.data.data.to,
                     total: res.data.data.total,
                     isLoading: true
+                });
+            });
+
+        axios
+            .post(
+                "http://127.0.0.1:8000/api/usersinfo/",
+                { email: userEmail },
+                {
+                    headers: {
+                        Authorization: `Bearer ${user_access_token}`
+                    }
+                }
+            )
+            .then(res => {
+                console.log(res.data);
+                this.setState({
+                    userInfo: res.data.data
                 });
             });
     }
@@ -127,98 +152,105 @@ class FilmList extends Component {
     render() {
         return (
             <div>
-                <div className="container">
-                    <h1>Film Lists</h1>
-                    <div className="ml-right">
-                        <span className="btn btn-sm btn-disabled btn-success text-white mr-1">
-                            {" "}
-                            Total Records: {this.state.total}{" "}
-                        </span>
-
-                        <span className="btn btn-sm btn-disabled btn-success text-white mr-1">
-                            {" "}
-                            Result Showing: {this.state.from} to {this.state.to}{" "}
-                        </span>
-
-                        <span className="btn btn-sm btn-disabled btn-success text-white mr-1">
-                            {" "}
-                            Current Page: {this.state.current_page} of{" "}
-                            {this.state.last_page}{" "}
-                        </span>
-                    </div>
-                    <div className="row">
-                        {this.state.filmList.map((film, id) => (
-                            <div className="col-md-3 mt-2 mb-2" key={id}>
-                                <Card>
-                                    <CardImg
-                                        top
-                                        width="100%"
-                                        src={film.photo}
-                                        alt="Film Thumbnail"
-                                    />
-                                    <CardBody>
-                                        <CardTitle>
-                                            Movie: {film.name}
-                                        </CardTitle>
-                                        <CardSubtitle>
-                                            Country: {film.country}
-                                        </CardSubtitle>
-                                        <Link
-                                            to={{
-                                                pathname: `/film/${film.name}`,
-                                                query: {
-                                                    film: film.id,
-                                                    bearer_token: this.state
-                                                        .access_token
-                                                }
-                                            }}
-                                        >
-                                            <Button>Details</Button>
-                                        </Link>
-                                    </CardBody>
-                                </Card>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="row">
-                        <div className="text-center">
-                            <span className="ml-2 pr-1">
-                                {this.state.prev_page_url === null ? (
-                                    <button
-                                        disabled
-                                        className="btn btn-md btn-primary"
-                                    >
-                                        Prev Page
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={this.prevPageHandler}
-                                        className="btn btn-md btn-primary"
-                                    >
-                                        Prev Page
-                                    </button>
-                                )}
+                {this.state.isUserAuthenticated ? (
+                    <div className="container">
+                        <h1>Film Lists</h1>
+                        <div className="ml-right">
+                            <span className="btn btn-sm btn-disabled btn-success text-white mr-1">
+                                {" "}
+                                Total Records: {this.state.total}{" "}
                             </span>
-                            <span className="pl-1">
-                                {this.state.next_page_url === null ? (
-                                    <button
-                                        disabled
-                                        className="btn btn-md btn-primary"
-                                    >
-                                        Next Page
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={this.nextPageHandler}
-                                        className="btn btn-md btn-primary"
-                                    >
-                                        Next Page
-                                    </button>
-                                )}
+
+                            <span className="btn btn-sm btn-disabled btn-success text-white mr-1">
+                                {" "}
+                                Result Showing: {this.state.from} to{" "}
+                                {this.state.to}{" "}
+                            </span>
+
+                            <span className="btn btn-sm btn-disabled btn-success text-white mr-1">
+                                {" "}
+                                Current Page: {this.state.current_page} of{" "}
+                                {this.state.last_page}{" "}
                             </span>
                         </div>
+                        <div className="row">
+                            {this.state.filmList.map((film, id) => (
+                                <div className="col-md-3 mt-2 mb-2" key={id}>
+                                    <Card>
+                                        <CardImg
+                                            top
+                                            width="100%"
+                                            src={film.photo}
+                                            alt="Film Thumbnail"
+                                        />
+                                        <CardBody>
+                                            <CardTitle>
+                                                Movie: {film.name}
+                                            </CardTitle>
+                                            <CardSubtitle>
+                                                Country: {film.country}
+                                            </CardSubtitle>
+                                            <Link
+                                                to={{
+                                                    pathname: `/film/${film.name}`,
+                                                    query: {
+                                                        film: film.id,
+                                                        bearer_token: this.state
+                                                            .access_token,
+                                                        user_info: this.state
+                                                            .userInfo
+                                                    }
+                                                }}
+                                            >
+                                                <Button>Details</Button>
+                                            </Link>
+                                        </CardBody>
+                                    </Card>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="row">
+                            <div className="text-center">
+                                <span className="ml-2 pr-1">
+                                    {this.state.prev_page_url === null ? (
+                                        <button
+                                            disabled
+                                            className="btn btn-md btn-primary"
+                                        >
+                                            Prev Page
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={this.prevPageHandler}
+                                            className="btn btn-md btn-primary"
+                                        >
+                                            Prev Page
+                                        </button>
+                                    )}
+                                </span>
+                                <span className="pl-1">
+                                    {this.state.next_page_url === null ? (
+                                        <button
+                                            disabled
+                                            className="btn btn-md btn-primary"
+                                        >
+                                            Next Page
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={this.nextPageHandler}
+                                            className="btn btn-md btn-primary"
+                                        >
+                                            Next Page
+                                        </button>
+                                    )}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <span> Please Login First </span>
+                )}
             </div>
         );
     }

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import TimeAgo from "react-timeago";
 import { Link } from "react-router-dom";
-import { Button } from "reactstrap";
+import { Button, FormGroup, Form, Label, Input } from "reactstrap";
 
 class Film extends Component {
     constructor(props) {
@@ -10,20 +10,30 @@ class Film extends Component {
 
         this.state = {
             film: [],
-
+            userInfo: [],
             commentsUser: [],
             filmGenres: [],
             genreIsLoaded: false,
             commentUserIsLoading: false,
             isLoading: false,
-            film_id: null
+            film_id: null,
+            comment: ""
         };
+
+        this.validateForm = this.validateForm.bind(this);
+        this.setInputValue = this.setInputValue.bind(this);
+        this.submitForm = this.submitForm.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
         const id = this.props.location.query.film;
         const access_token = this.props.location.query.bearer_token;
         // console.log(id);
+        this.setState({
+            userInfo: this.props.location.query.user_info,
+            film_id: this.props.location.query.film
+        });
         axios
             .get(`http://127.0.0.1:8000/api/films/${id}`, {
                 headers: {
@@ -64,6 +74,35 @@ class Film extends Component {
                     genreIsLoaded: true
                 });
             });
+    }
+
+    validateForm() {
+        return this.state.comment.length > 0;
+    }
+
+    setInputValue(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    }
+
+    submitForm() {
+        const body = {
+            comment: this.state.comment,
+            user_id: this.state.userInfo[0].id,
+            film_id: this.state.film_id
+        };
+        // console.log(this.state.userInfo[0].id);
+        axios.post("http://127.0.0.1:8000/api/comments", body).then(res => {
+            console.log(res.data.data);
+            this.setState({
+                commentsUser: [...this.state.commentsUser, res.data.data]
+            });
+        });
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
     }
 
     render() {
@@ -132,6 +171,28 @@ class Film extends Component {
                                 </ul>
                             </div>
                         ))}
+
+                        <div>
+                            <Form onSubmit={e => e.preventDefault()}>
+                                <FormGroup>
+                                    <Label>New Comment</Label>
+                                    <Input
+                                        autoFocus
+                                        type="text"
+                                        name="comment"
+                                        value={this.state.comment}
+                                        onChange={this.setInputValue}
+                                    />
+                                </FormGroup>
+                                <Button
+                                    type="submit"
+                                    disabled={!this.validateForm()}
+                                    onClick={this.submitForm}
+                                >
+                                    Add
+                                </Button>
+                            </Form>
+                        </div>
                     </div>
                 </div>
             </div>

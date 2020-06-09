@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Button, FormGroup, Form, Label, Input } from "reactstrap";
+import axios from "axios";
+import { Redirect } from "react-router-dom";
 
 class Login extends Component {
     constructor(props) {
@@ -8,7 +10,9 @@ class Login extends Component {
         this.state = {
             userIsAuthenticated: false,
             email: "",
-            password: ""
+            password: "",
+            token_type: "",
+            access_token: ""
         };
 
         this.validateForm = this.validateForm.bind(this);
@@ -26,7 +30,39 @@ class Login extends Component {
         });
     }
 
-    submitForm() {}
+    submitForm() {
+        const body = {
+            grant_type: "password",
+            client_id: 2,
+            client_secret: "zNU41MzobVGo09ndiZr2Z0OKwKXlXKTXVAKzG25w",
+            username: this.state.email,
+            password: this.state.password
+        };
+
+        axios.post("http://127.0.0.1:8000/oauth/token", body).then(res => {
+            console.log(res.data);
+            this.setState({
+                token_type: res.data.token_type,
+                access_token: res.data.access_token,
+                userIsAuthenticated: true
+            });
+
+            // console.log(this.state.userIsAuthenticated);
+            if (this.state.userIsAuthenticated) {
+                // console.log(this.state.email);
+                // console.log("it is true");
+                this.props.history.push({
+                    pathname: "/filmlist",
+                    state: {
+                        userIsAuthenticated: this.state.userIsAuthenticated,
+                        email: this.state.email,
+                        user_access_token: this.state.access_token
+                    }
+                });
+                // return <Redirect to={"/filmlist/"} />;
+            }
+        });
+    }
 
     render() {
         return (
