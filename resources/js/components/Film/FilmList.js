@@ -41,20 +41,29 @@ class FilmList extends Component {
     }
 
     componentDidMount() {
-        var userEmail = "null";
-        var user_access_token = "null";
-        if (this.props.history.location.state == undefined) {
-            userEmail = "null";
-            user_access_token = "null";
-        } else {
-            userEmail = this.props.history.location.state.email;
-            user_access_token = this.props.history.location.state
-                .user_access_token;
+        // var userEmail = "null";
+        // var user_access_token = "null";
+        // if (this.props.history.location.state == undefined) {
+        //     userEmail = "null";
+        //     user_access_token = "null";
+        // } else {
+        //     userEmail = this.props.history.location.state.email;
+        //     user_access_token = this.props.history.location.state
+        //         .user_access_token;
+        //     this.setState({
+        //         isUserAuthenticated: this.props.history.location.state
+        //             .userIsAuthenticated
+        //     });
+        // }
+
+        if (localStorage.userIsAuthenticated) {
             this.setState({
-                isUserAuthenticated: this.props.history.location.state
-                    .userIsAuthenticated
+                isUserAuthenticated: true
             });
         }
+        const userEmail = localStorage.getItem("email");
+        const user_access_token = localStorage.getItem("access_token");
+        localStorage.setItem("bearer_token", this.state.access_token);
 
         axios
             .get("http://127.0.0.1:8000/api/films/", {
@@ -92,6 +101,7 @@ class FilmList extends Component {
             )
             .then(res => {
                 console.log(res.data);
+                localStorage.setItem("user_info", res.data.data);
                 this.setState({
                     userInfo: res.data.data
                 });

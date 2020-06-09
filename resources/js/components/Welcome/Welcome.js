@@ -9,8 +9,10 @@ class Welcome extends Component {
     render() {
         return (
             <div className="container">
-                <div className="mt-5">
-                    <h5>Welcome</h5>
+                <div className="jumbotron mt-5">
+                    <div className="col-sm-8 mx-auto">
+                        <h1 className="text-center">Welcome</h1>
+                    </div>
                 </div>
             </div>
         );

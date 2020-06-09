@@ -139,7 +139,7 @@ class Film extends Component {
                         <h6> Country of origin: {this.state.film.country} </h6>
                         <div>
                             <Link to={`/filmlist`}>
-                                <Button>Details</Button>
+                                <Button>Back To Home</Button>
                             </Link>
                         </div>
                     </div>

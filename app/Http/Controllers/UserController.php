@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api', ['except' => ['store']]);
     }
     /**
      * Display a listing of the resource.
@@ -41,7 +42,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            "name" => "required",
+            "email" => "required|email|unique:users",
+            "password" => 'required|min:4',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->getMessageBag()], 200);
+        }
+
+        $data = $request->all();
+        $data['password'] = bcrypt($request->password);
+        $user = User::create($data);
+
+        return response()->json(['data' => $user], 200);
     }
 
     /**
