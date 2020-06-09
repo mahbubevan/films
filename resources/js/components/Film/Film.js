@@ -12,7 +12,8 @@ class Film extends Component {
             film: [],
 
             commentsUser: [],
-
+            filmGenres: [],
+            genreIsLoaded: false,
             commentUserIsLoading: false,
             isLoading: false,
             film_id: null
@@ -21,7 +22,7 @@ class Film extends Component {
 
     componentDidMount() {
         const id = this.props.location.query;
-        console.log(id);
+        // console.log(id);
         axios.get(`http://127.0.0.1:8000/api/films/${id}`).then(res => {
             this.setState({
                 film: res.data.data,
@@ -34,6 +35,14 @@ class Film extends Component {
             this.setState({
                 commentsUser: res.data.data,
                 commentUserIsLoading: true
+            });
+        });
+
+        axios.get(`http://127.0.0.1:8000/api/films/${id}/genres`).then(res => {
+            console.log(res);
+            this.setState({
+                filmGenres: res.data.data,
+                genreIsLoaded: true
             });
         });
     }
@@ -50,6 +59,12 @@ class Film extends Component {
                             height="150px"
                         />
                         <h4>Movie Name: {this.state.film.name} </h4>
+                        <h6>
+                            Genre:{" "}
+                            {this.state.filmGenres.map((genre, id) => (
+                                <span key={id}> {genre.name}, </span>
+                            ))}
+                        </h6>
                         <h6>Release Date: {this.state.film.release} </h6>
                         <h6>Rating: {this.state.film.rating} </h6>
                         <h6>Ticket price: {this.state.film.price} </h6>

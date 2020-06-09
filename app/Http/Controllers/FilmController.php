@@ -4,17 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Film;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FilmController extends Controller
 {
+
+    public function __construct()
+    {
+        // $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        // dd(auth()->guard('api')->user());
         $films = Film::paginate(3);
+        // $auth_user = auth('api')->user();
+        // dd($auth_user);
 
         return response()->json(['data' => $films]);
     }
