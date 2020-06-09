@@ -21,30 +21,49 @@ class Film extends Component {
     }
 
     componentDidMount() {
-        const id = this.props.location.query;
+        const id = this.props.location.query.film;
+        const access_token = this.props.location.query.bearer_token;
         // console.log(id);
-        axios.get(`http://127.0.0.1:8000/api/films/${id}`).then(res => {
-            this.setState({
-                film: res.data.data,
-                film_id: id,
-                isLoading: true
+        axios
+            .get(`http://127.0.0.1:8000/api/films/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            })
+            .then(res => {
+                this.setState({
+                    film: res.data.data,
+                    film_id: id,
+                    isLoading: true
+                });
             });
-        });
 
-        axios.get(`http://127.0.0.1:8000/api/films/${id}/users`).then(res => {
-            this.setState({
-                commentsUser: res.data.data,
-                commentUserIsLoading: true
+        axios
+            .get(`http://127.0.0.1:8000/api/films/${id}/users`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            })
+            .then(res => {
+                this.setState({
+                    commentsUser: res.data.data,
+                    commentUserIsLoading: true
+                });
             });
-        });
 
-        axios.get(`http://127.0.0.1:8000/api/films/${id}/genres`).then(res => {
-            console.log(res);
-            this.setState({
-                filmGenres: res.data.data,
-                genreIsLoaded: true
+        axios
+            .get(`http://127.0.0.1:8000/api/films/${id}/genres`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            })
+            .then(res => {
+                // console.log(res);
+                this.setState({
+                    filmGenres: res.data.data,
+                    genreIsLoaded: true
+                });
             });
-        });
     }
 
     render() {

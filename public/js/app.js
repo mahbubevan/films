@@ -83275,24 +83275,36 @@ var Film = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      var id = this.props.location.query; // console.log(id);
+      var id = this.props.location.query.film;
+      var access_token = this.props.location.query.bearer_token; // console.log(id);
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/".concat(id)).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/".concat(id), {
+        headers: {
+          Authorization: "Bearer ".concat(access_token)
+        }
+      }).then(function (res) {
         _this2.setState({
           film: res.data.data,
           film_id: id,
           isLoading: true
         });
       });
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/".concat(id, "/users")).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/".concat(id, "/users"), {
+        headers: {
+          Authorization: "Bearer ".concat(access_token)
+        }
+      }).then(function (res) {
         _this2.setState({
           commentsUser: res.data.data,
           commentUserIsLoading: true
         });
       });
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/".concat(id, "/genres")).then(function (res) {
-        console.log(res);
-
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/".concat(id, "/genres"), {
+        headers: {
+          Authorization: "Bearer ".concat(access_token)
+        }
+      }).then(function (res) {
+        // console.log(res);
         _this2.setState({
           filmGenres: res.data.data,
           genreIsLoaded: true
@@ -83418,19 +83430,34 @@ var FilmList = /*#__PURE__*/function (_Component) {
       prev_page_url: "",
       to: 0,
       total: 0,
-      isLoading: false
+      isLoading: false,
+      access_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiOGY2YjUyMzIwNGU2MjJkYWRhZjA5ODk0MmQzYWQyNDg5OWE2NmQ3NDlmNmFmYmYwZGYzMTBiODZlNmQ5MTEwY2E5NTFmNWU1NzA1MzNlZDkiLCJpYXQiOjE1OTE2ODgxMDUsIm5iZiI6MTU5MTY4ODEwNSwiZXhwIjoxNjIzMjI0MTA1LCJzdWIiOiIiLCJzY29wZXMiOltdfQ.fTpWrD4-mu1dw8eud3cLOW22g8AiwRRBg_nNW2tCXLMDD4GtNTW6tiYUhFtQThihP6dcn5iFc0ArZw3fY-LtVWCFSkPQV6rtvj6uLH0sfS2C7uDHFfSGvBSgIPNFh62HcksT_SuhKG-dcv7czDtQqD-P0Sqq3Xkr6dkGsZB-kAXFBIiEhFiAwuyag0wcGn-Ph8_R-pxcf4L1VhPWDL1S7oXPbNyPBPzETGeL3ECWYk4V16wTEteELqxVHiEOQ7cAYdbjvYbSVkWIKrw4cLqM-msgwIDSQma4Tzmks2GGWgMuBCw43viqymxaVAffoXSxJUaqLiisN8Rtre1_9Ge-CLgVF2KyDhmiNEgvM2aL6LMP14K47MlyTZMs2pVmyS3puywSGdDwa_kDxL1GDt349AHXyQn_rLHEMbEnvSFRgkO1aF7rmsrrfTfuvlBVQ3p5yppjp82UkOiL9P3KzvA0fTjyCRz4-sRK2HWsJK6GBFUDnzPg-bFnjyCGkrutzEZEEvgO2-Zw9lPkZle255wbP_f2SdIRE1HyJd0fAo2vR1zM__y7fjypUC74StLqbkZq8Bxq9o9rzGAghbUeBGoJCfaslelkRfd8MjHL_79CWpQEZg4AzxpnoOkTCJ6mn3KiEfoDYUQUOhkbkesakpkj640im4PVhHPy7YV2D6gwT6o"
     };
     _this.nextPageHandler = _this.nextPageHandler.bind(_assertThisInitialized(_this));
     _this.prevPageHandler = _this.prevPageHandler.bind(_assertThisInitialized(_this));
     return _this;
-  }
+  } // const body = {
+  //         grant_type: "client_credentials",
+  //         client_id: 2,
+  //         client_secret: "zNU41MzobVGo09ndiZr2Z0OKwKXlXKTXVAKzG25w"
+  //     };
+  //     axios.post("http://127.0.0.1:8000/oauth/token", body).then(res =>
+  //         this.setState({
+  //             access_token: res.data.access_token
+  //         })
+  //     );
+
 
   _createClass(FilmList, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/").then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("http://127.0.0.1:8000/api/films/", {
+        headers: {
+          Authorization: "Bearer ".concat(this.state.access_token)
+        }
+      }).then(function (res) {
         // console.log(res.data.data);
         _this2.setState({
           filmList: res.data.data.data,
@@ -83454,7 +83481,11 @@ var FilmList = /*#__PURE__*/function (_Component) {
       var _this3 = this;
 
       var url = this.state.next_page_url;
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url, {
+        headers: {
+          Authorization: "Bearer ".concat(this.state.access_token)
+        }
+      }).then(function (res) {
         // console.log(res.data.data);
         _this3.setState({
           filmList: res.data.data.data,
@@ -83477,7 +83508,11 @@ var FilmList = /*#__PURE__*/function (_Component) {
       var _this4 = this;
 
       var url = this.state.prev_page_url;
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url, {
+        headers: {
+          Authorization: "Bearer ".concat(this.state.access_token)
+        }
+      }).then(function (res) {
         _this4.setState({
           filmList: res.data.data.data,
           current_page: res.data.data.current_page,
@@ -83496,6 +83531,8 @@ var FilmList = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this5 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Film Lists"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -83520,7 +83557,10 @@ var FilmList = /*#__PURE__*/function (_Component) {
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardBody"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardTitle"], null, "Movie: ", film.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["CardSubtitle"], null, "Country: ", film.country), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
           to: {
             pathname: "/film/".concat(film.name),
-            query: film.id
+            query: {
+              film: film.id,
+              bearer_token: _this5.state.access_token
+            }
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], null, "Details")))));
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

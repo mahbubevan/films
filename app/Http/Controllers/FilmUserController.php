@@ -12,6 +12,12 @@ class FilmUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        // $this->middleware('auth:api');
+        $this->middleware('client.credentials', ['only' => ['index']]);
+    }
+
     public function index(Film $film)
     {
         $users = $film->comments()

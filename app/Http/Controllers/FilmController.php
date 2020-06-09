@@ -12,6 +12,7 @@ class FilmController extends Controller
     public function __construct()
     {
         // $this->middleware('auth:api');
+        $this->middleware('client.credentials', ['only' => ['index', 'show']]);
     }
     /**
      * Display a listing of the resource.

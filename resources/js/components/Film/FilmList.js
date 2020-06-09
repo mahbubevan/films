@@ -27,70 +27,101 @@ class FilmList extends Component {
             prev_page_url: "",
             to: 0,
             total: 0,
-            isLoading: false
+            isLoading: false,
+            access_token:
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiOGY2YjUyMzIwNGU2MjJkYWRhZjA5ODk0MmQzYWQyNDg5OWE2NmQ3NDlmNmFmYmYwZGYzMTBiODZlNmQ5MTEwY2E5NTFmNWU1NzA1MzNlZDkiLCJpYXQiOjE1OTE2ODgxMDUsIm5iZiI6MTU5MTY4ODEwNSwiZXhwIjoxNjIzMjI0MTA1LCJzdWIiOiIiLCJzY29wZXMiOltdfQ.fTpWrD4-mu1dw8eud3cLOW22g8AiwRRBg_nNW2tCXLMDD4GtNTW6tiYUhFtQThihP6dcn5iFc0ArZw3fY-LtVWCFSkPQV6rtvj6uLH0sfS2C7uDHFfSGvBSgIPNFh62HcksT_SuhKG-dcv7czDtQqD-P0Sqq3Xkr6dkGsZB-kAXFBIiEhFiAwuyag0wcGn-Ph8_R-pxcf4L1VhPWDL1S7oXPbNyPBPzETGeL3ECWYk4V16wTEteELqxVHiEOQ7cAYdbjvYbSVkWIKrw4cLqM-msgwIDSQma4Tzmks2GGWgMuBCw43viqymxaVAffoXSxJUaqLiisN8Rtre1_9Ge-CLgVF2KyDhmiNEgvM2aL6LMP14K47MlyTZMs2pVmyS3puywSGdDwa_kDxL1GDt349AHXyQn_rLHEMbEnvSFRgkO1aF7rmsrrfTfuvlBVQ3p5yppjp82UkOiL9P3KzvA0fTjyCRz4-sRK2HWsJK6GBFUDnzPg-bFnjyCGkrutzEZEEvgO2-Zw9lPkZle255wbP_f2SdIRE1HyJd0fAo2vR1zM__y7fjypUC74StLqbkZq8Bxq9o9rzGAghbUeBGoJCfaslelkRfd8MjHL_79CWpQEZg4AzxpnoOkTCJ6mn3KiEfoDYUQUOhkbkesakpkj640im4PVhHPy7YV2D6gwT6o"
         };
 
         this.nextPageHandler = this.nextPageHandler.bind(this);
         this.prevPageHandler = this.prevPageHandler.bind(this);
     }
+    // const body = {
+    //         grant_type: "client_credentials",
+    //         client_id: 2,
+    //         client_secret: "zNU41MzobVGo09ndiZr2Z0OKwKXlXKTXVAKzG25w"
+    //     };
+
+    //     axios.post("http://127.0.0.1:8000/oauth/token", body).then(res =>
+    //         this.setState({
+    //             access_token: res.data.access_token
+    //         })
+    //     );
 
     componentDidMount() {
-        axios.get("http://127.0.0.1:8000/api/films/").then(res => {
-            // console.log(res.data.data);
-            this.setState({
-                filmList: res.data.data.data,
-                current_page: res.data.data.current_page,
-                first_page_url: res.data.data.first_page_url,
-                from: res.data.data.from,
-                last_page: res.data.data.last_page,
-                last_page_url: res.data.data.last_page_url,
-                next_page_url: res.data.data.next_page_url,
-                per_page: res.data.data.per_page,
-                prev_page_url: res.data.data.prev_page_url,
-                to: res.data.data.to,
-                total: res.data.data.total,
-                isLoading: true
+        axios
+            .get("http://127.0.0.1:8000/api/films/", {
+                headers: {
+                    Authorization: `Bearer ${this.state.access_token}`
+                }
+            })
+            .then(res => {
+                // console.log(res.data.data);
+                this.setState({
+                    filmList: res.data.data.data,
+                    current_page: res.data.data.current_page,
+                    first_page_url: res.data.data.first_page_url,
+                    from: res.data.data.from,
+                    last_page: res.data.data.last_page,
+                    last_page_url: res.data.data.last_page_url,
+                    next_page_url: res.data.data.next_page_url,
+                    per_page: res.data.data.per_page,
+                    prev_page_url: res.data.data.prev_page_url,
+                    to: res.data.data.to,
+                    total: res.data.data.total,
+                    isLoading: true
+                });
             });
-        });
     }
 
     nextPageHandler() {
         const url = this.state.next_page_url;
-        axios.get(url).then(res => {
-            // console.log(res.data.data);
-            this.setState({
-                filmList: res.data.data.data,
-                current_page: res.data.data.current_page,
-                first_page_url: res.data.data.first_page_url,
-                from: res.data.data.from,
-                last_page: res.data.data.last_page,
-                last_page_url: res.data.data.last_page_url,
-                next_page_url: res.data.data.next_page_url,
-                per_page: res.data.data.per_page,
-                prev_page_url: res.data.data.prev_page_url,
-                to: res.data.data.to,
-                total: res.data.data.total
+        axios
+            .get(url, {
+                headers: {
+                    Authorization: `Bearer ${this.state.access_token}`
+                }
+            })
+            .then(res => {
+                // console.log(res.data.data);
+                this.setState({
+                    filmList: res.data.data.data,
+                    current_page: res.data.data.current_page,
+                    first_page_url: res.data.data.first_page_url,
+                    from: res.data.data.from,
+                    last_page: res.data.data.last_page,
+                    last_page_url: res.data.data.last_page_url,
+                    next_page_url: res.data.data.next_page_url,
+                    per_page: res.data.data.per_page,
+                    prev_page_url: res.data.data.prev_page_url,
+                    to: res.data.data.to,
+                    total: res.data.data.total
+                });
             });
-        });
     }
 
     prevPageHandler() {
         const url = this.state.prev_page_url;
-        axios.get(url).then(res => {
-            this.setState({
-                filmList: res.data.data.data,
-                current_page: res.data.data.current_page,
-                first_page_url: res.data.data.first_page_url,
-                from: res.data.data.from,
-                last_page: res.data.data.last_page,
-                last_page_url: res.data.data.last_page_url,
-                next_page_url: res.data.data.next_page_url,
-                per_page: res.data.data.per_page,
-                prev_page_url: res.data.data.prev_page_url,
-                to: res.data.data.to,
-                total: res.data.data.total
+        axios
+            .get(url, {
+                headers: {
+                    Authorization: `Bearer ${this.state.access_token}`
+                }
+            })
+            .then(res => {
+                this.setState({
+                    filmList: res.data.data.data,
+                    current_page: res.data.data.current_page,
+                    first_page_url: res.data.data.first_page_url,
+                    from: res.data.data.from,
+                    last_page: res.data.data.last_page,
+                    last_page_url: res.data.data.last_page_url,
+                    next_page_url: res.data.data.next_page_url,
+                    per_page: res.data.data.per_page,
+                    prev_page_url: res.data.data.prev_page_url,
+                    to: res.data.data.to,
+                    total: res.data.data.total
+                });
             });
-        });
     }
 
     render() {
@@ -135,7 +166,11 @@ class FilmList extends Component {
                                         <Link
                                             to={{
                                                 pathname: `/film/${film.name}`,
-                                                query: film.id
+                                                query: {
+                                                    film: film.id,
+                                                    bearer_token: this.state
+                                                        .access_token
+                                                }
                                             }}
                                         >
                                             <Button>Details</Button>
