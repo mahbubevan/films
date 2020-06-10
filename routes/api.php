@@ -24,12 +24,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('films', 'FilmController');
 Route::resource('films.comments', 'FilmCommentController', ['only' => ['index']]); // Comment list for specific film
 Route::resource('films.users', 'FilmUserController', ['only' => ['index']]); // User List For Specific Film where user commented
-Route::resource('films.genres', 'FilmGenreController', ['only' => ['index']]); // Genres List For Specific Films
+Route::resource('films.genres', 'FilmGenreController', ['only' => ['index', 'store']]); // Genres List For Specific Films
 // });
 
 
 // Genre ROutes
-// Route::resource('genres', 'GenreController', ['only' => ['index', 'show']]);
+Route::resource('genres', 'GenreController', ['only' => ['index', 'show']]);
 // Route::resource('genres.films', 'GenreFilmController', ['only' => ['index']]); // Films List For Specific Genre
 
 //Comments Routes

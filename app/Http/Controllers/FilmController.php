@@ -70,10 +70,19 @@ class FilmController extends Controller
         $data['photo'] = $filename;
 
         // return response()->json(['data' => $data], 200);
-
+        // dd($request->genres);
         $film = Film::create($data);
         $file->move($savePath, $filename);
-        return response()->json(['data' => $film], 200);
+
+        $genre_id = explode(',', $request->genres);
+        $genre_id = array_map(function ($value) {
+            return $value;
+        }, $genre_id);
+
+        foreach ($genre_id as $id) {
+            $film->genres()->attach($id);
+        }
+        return response()->json(['data' => $film, 'genre' => $genre_id], 200);
     }
 
     /**

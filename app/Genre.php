@@ -13,6 +13,7 @@ class Genre extends Model
 
     const DEFAULT_GENRE = 'NOT AVAILABLE';
 
+    protected $table = 'genres';
     protected $fillable = [
         'name',
     ];

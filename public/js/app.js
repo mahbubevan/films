@@ -83235,6 +83235,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -83281,16 +83293,41 @@ var AddFilm = /*#__PURE__*/function (_Component) {
       photo: null,
       success: {
         status: false
-      }
+      },
+      genres: [],
+      selectedGenre: []
     };
     _this.validateForm = _this.validateForm.bind(_assertThisInitialized(_this));
     _this.setInputValue = _this.setInputValue.bind(_assertThisInitialized(_this));
     _this.submitForm = _this.submitForm.bind(_assertThisInitialized(_this));
     _this.fileOnChange = _this.fileOnChange.bind(_assertThisInitialized(_this));
+    _this.handleGenre = _this.handleGenre.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(AddFilm, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("http://127.0.0.1:8000/api/genres").then(function (res) {
+        console.log(res.data.data);
+
+        _this2.setState({
+          genres: res.data.data
+        });
+      });
+    }
+  }, {
+    key: "handleGenre",
+    value: function handleGenre(event) {
+      this.setState({
+        selectedGenre: _toConsumableArray(event.target.selectedOptions).map(function (o) {
+          return o.value;
+        })
+      });
+    }
+  }, {
     key: "fileOnChange",
     value: function fileOnChange(event) {
       this.setState({
@@ -83300,7 +83337,7 @@ var AddFilm = /*#__PURE__*/function (_Component) {
   }, {
     key: "submitForm",
     value: function submitForm() {
-      var _this2 = this;
+      var _this3 = this;
 
       // const body = {
       //     name: this.state.name,
@@ -83325,10 +83362,11 @@ var AddFilm = /*#__PURE__*/function (_Component) {
       formData.append("ticket", this.state.ticket);
       formData.append("country", this.state.country);
       formData.append("photo", this.state.photo);
+      formData.append("genres", this.state.selectedGenre);
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("http://127.0.0.1:8000/api/films", formData, config).then(function (res) {
         console.log(res);
 
-        _this2.setState({
+        _this3.setState({
           success: {
             message: "Successfully Added.",
             status: true
@@ -83340,7 +83378,8 @@ var AddFilm = /*#__PURE__*/function (_Component) {
           price: 0,
           ticket: "not_available",
           country: "",
-          photo: null
+          photo: null,
+          selectedGenre: []
         });
       })["catch"](function (err) {
         return console.log(err);
@@ -83379,7 +83418,18 @@ var AddFilm = /*#__PURE__*/function (_Component) {
         name: "description",
         value: this.state.description,
         onChange: this.setInputValue
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["FormGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Label"], {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["FormGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Label"], null, "Select Genres"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Input"], {
+        autoFocus: true,
+        type: "select",
+        multiple: true,
+        name: "selectedGenre",
+        onChange: this.handleGenre
+      }, this.state.genres.map(function (genre, id) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          key: id,
+          value: genre.id
+        }, genre.name);
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["FormGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Label"], {
         "for": "release"
       }, "Movie Release Date: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Input"], {
         autoFocus: true,

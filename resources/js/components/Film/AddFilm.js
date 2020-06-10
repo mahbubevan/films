@@ -15,13 +15,31 @@ class AddFilm extends Component {
             ticket: "not_available",
             country: "",
             photo: null,
-            success: { status: false }
+            success: { status: false },
+            genres: [],
+            selectedGenre: []
         };
 
         this.validateForm = this.validateForm.bind(this);
         this.setInputValue = this.setInputValue.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.fileOnChange = this.fileOnChange.bind(this);
+        this.handleGenre = this.handleGenre.bind(this);
+    }
+
+    componentDidMount() {
+        axios.get("http://127.0.0.1:8000/api/genres").then(res => {
+            console.log(res.data.data);
+            this.setState({
+                genres: res.data.data
+            });
+        });
+    }
+
+    handleGenre(event) {
+        this.setState({
+            selectedGenre: [...event.target.selectedOptions].map(o => o.value)
+        });
     }
 
     fileOnChange(event) {
@@ -56,6 +74,7 @@ class AddFilm extends Component {
         formData.append("ticket", this.state.ticket);
         formData.append("country", this.state.country);
         formData.append("photo", this.state.photo);
+        formData.append("genres", this.state.selectedGenre);
         axios
             .post("http://127.0.0.1:8000/api/films", formData, config)
             .then(res => {
@@ -69,7 +88,8 @@ class AddFilm extends Component {
                     price: 0,
                     ticket: "not_available",
                     country: "",
-                    photo: null
+                    photo: null,
+                    selectedGenre: []
                 });
             })
             .catch(err => console.log(err));
@@ -121,6 +141,22 @@ class AddFilm extends Component {
                             value={this.state.description}
                             onChange={this.setInputValue}
                         />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>Select Genres</Label>
+                        <Input
+                            autoFocus
+                            type="select"
+                            multiple={true}
+                            name="selectedGenre"
+                            onChange={this.handleGenre}
+                        >
+                            {this.state.genres.map((genre, id) => (
+                                <option key={id} value={genre.id}>
+                                    {genre.name}
+                                </option>
+                            ))}
+                        </Input>
                     </FormGroup>
                     <FormGroup>
                         <Label for="release">Movie Release Date: </Label>
